@@ -1,6 +1,9 @@
 const fs = require('fs')
 const http = require('http')
 const url = require('url')
+
+const slugify = require('slugify')
+
 const replaceTemplate = require('./modules/replaceTemplate')
 
 ////////////////////////
@@ -45,7 +48,8 @@ const tempProduct = fs.readFileSync(`${__dirname}/templates/template-product.htm
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`,'utf-8');
 const dataObj = JSON.parse(data)
 
-
+const slugs = dataObj.map(obj => slugify(obj.productName, { lower: true}))
+console.log(slugs)
 
 const server = http.createServer((req, res)=>{
 
@@ -62,7 +66,7 @@ const server = http.createServer((req, res)=>{
         res.end(output)
 
     // Product page
-    } else if (pathName === '/product'){
+    } else if (pathName === "/product"){
         res.writeHead(200, {'Content-type' : 'text/html'})
 
         const product = dataObj[query.id]
